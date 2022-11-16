@@ -17,24 +17,60 @@ scoreEl1.textContent = 0;
 
 let currentScore = 0;
 let currentPlayer = 0;
-let scores = [0, 0];
+const scores = [0, 0];
+let isPlaying = true;
 
 diceEl.classList.add('hidden');
 
-btnRoll.addEventListener('click', function () {
-  const dice = Math.trunc(Math.random() * 6) + 1;
-  diceEl.classList.remove('hidden');
-  diceEl.src = `dice-${dice}.png`;
+const switchPlayer = function () {
+  document.getElementById(`current--${currentPlayer}`).textContent = 0;
+  currentPlayer = currentPlayer === 0 ? 1 : 0;
+  currentScore = 0;
+  playerEl0.classList.toggle('player--active');
+  playerEl1.classList.toggle('player--active');
+};
 
-  if (dice !== 1) {
-    currentScore += dice;
-    document.getElementById(`current--${currentPlayer}`).textContent =
-      currentScore;
-  } else {
-    document.getElementById(`current--${currentPlayer}`).textContent = 0;
-    currentPlayer = currentPlayer === 0 ? 1 : 0;
-    currentScore = 0;
-    playerEl0.classList.toggle('player--active');
-    playerEl1.classList.toggle('player--active');
+btnRoll.addEventListener('click', function () {
+  if (isPlaying) {
+    const dice = Math.trunc(Math.random() * 6) + 1;
+    diceEl.classList.remove('hidden');
+    diceEl.src = `dice-${dice}.png`;
+
+    if (dice !== 1) {
+      currentScore += dice;
+      document.getElementById(`current--${currentPlayer}`).textContent =
+        currentScore;
+    } else {
+      switchPlayer();
+    }
+  }
+});
+
+btnHold.addEventListener('click', function () {
+  if (isPlaying) {
+    scores[currentPlayer] += currentScore;
+    document.getElementById(`score--${currentPlayer}`).textContent =
+      scores[currentPlayer];
+
+    if (scores[currentPlayer] >= 20) {
+      isPlaying = false;
+      diceEl.classList.add('hidden');
+
+      document
+        .querySelector(`.player--${currentPlayer}`)
+        .classList.add('player--winner');
+      document
+        .querySelector(`.player--${currentPlayer}`)
+        .classList.remove('player--active');
+    } else {
+      switchPlayer();
+    }
+    //Player swithing function...
+
+    /*document.getElementById(`current--${currentPlayer}`).textContent = 0;
+  currentPlayer = currentPlayer === 0 ? 1 : 0;
+  currentScore = 0;
+  playerEl0.classList.toggle('player--active');
+  playerEl1.classList.toggle('player--active');*/
   }
 });
