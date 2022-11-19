@@ -120,6 +120,7 @@ btnNew.addEventListener('click', function () {
   }*/
 
   playerEl0.classList.add('player--active');
+  playerEl1.classList.remove('player--active');
 
   isPlaying = true;
 });
